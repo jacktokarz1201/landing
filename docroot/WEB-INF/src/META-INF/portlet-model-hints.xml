@@ -1,0 +1,11 @@
+<?xml version="1.0"?>
+
+<model-hints>
+	<model name="com.ms3.landing.service.model.Announcement">
+		<field name="ID" type="long" />
+		<field name="Title" type="String" />
+		<field name="Content" type="String" />
+		<field name="SetDate" type="Date" />
+		<field name="Author" type="String" />
+	</model>
+</model-hints>

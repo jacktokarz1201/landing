@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE service-builder PUBLIC "-//Liferay//DTD Service Builder 6.2.0//EN" "http://www.liferay.com/dtd/liferay-service-builder_6_2_0.dtd">
+<service-builder package-path="com.ms3.landing.service">
+	<author>John</author>
+	<namespace>landing</namespace>
+
+	<entity name="Announcement" remote-service="true"
+		local-service="true">
+		
+		<column name="ID" type="long" primary="true"></column>
+		<column name="Title" type="String"></column>
+		<column name="Content" type="String"></column>
+		<column name="SetDate" type="Date"></column>
+		<column name="Author" type="String"></column>
+        <order by="asc">
+            <order-column name="SetDate" order-by="desc"></order-column>
+        </order>
+        
+	</entity>
+</service-builder>

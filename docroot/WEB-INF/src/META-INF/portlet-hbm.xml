@@ -1,0 +1,16 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN" "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+
+<hibernate-mapping default-lazy="false" auto-import="false">
+	<import class="com.ms3.landing.service.model.Announcement" />
+	<class name="com.ms3.landing.service.model.impl.AnnouncementImpl" table="landing_Announcement">
+		<cache usage="read-write" />
+		<id name="ID" type="long">
+			<generator class="assigned" />
+		</id>
+		<property name="Title" type="com.liferay.portal.dao.orm.hibernate.StringType" />
+		<property name="Content" type="com.liferay.portal.dao.orm.hibernate.StringType" />
+		<property name="SetDate" type="org.hibernate.type.TimestampType" />
+		<property name="Author" type="com.liferay.portal.dao.orm.hibernate.StringType" />
+	</class>
+</hibernate-mapping>

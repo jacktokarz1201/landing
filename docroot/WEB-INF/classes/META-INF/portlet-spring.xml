@@ -1,0 +1,7 @@
+<?xml version="1.0"?>
+
+<beans xmlns="http://www.springframework.org/schema/beans" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" default-destroy-method="destroy" default-init-method="afterPropertiesSet" xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.0.xsd">
+	<bean id="com.ms3.landing.service.service.AnnouncementLocalService" class="com.ms3.landing.service.service.impl.AnnouncementLocalServiceImpl" />
+	<bean id="com.ms3.landing.service.service.AnnouncementService" class="com.ms3.landing.service.service.impl.AnnouncementServiceImpl" />
+	<bean id="com.ms3.landing.service.service.persistence.AnnouncementPersistence" class="com.ms3.landing.service.service.persistence.AnnouncementPersistenceImpl" parent="basePersistence" />
+</beans>
