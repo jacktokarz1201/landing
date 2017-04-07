@@ -11,6 +11,7 @@ import com.liferay.portal.kernel.portlet.DefaultConfigurationAction;
 import com.liferay.portal.kernel.servlet.SessionErrors;
 import com.liferay.portal.kernel.servlet.SessionMessages;
 import com.liferay.portal.kernel.util.ParamUtil;
+import com.liferay.portal.service.OrganizationLocalServiceUtil;
 import com.liferay.portlet.PortletPreferencesFactoryUtil;
 
 public class ConfigurationActionImpl extends DefaultConfigurationAction{
@@ -87,6 +88,7 @@ public class ConfigurationActionImpl extends DefaultConfigurationAction{
 			  SessionMessages.add(actionRequest, "config-stored");
 			  System.out.println("Parent Org id: "+customerParentOrganizationId);
 			  System.out.println("ticketListEndPoint is:"+ticketListEndPoint);
+			  System.out.println("parent org name is:"+parentOrgName);
 			  
 			}
 			catch(Exception e){
