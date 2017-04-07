@@ -88,12 +88,13 @@ public class PortletServices {
         PortletPreferences pref = request.getPreferences();
         long customerOrgId = 0;
         String customerParentOrganizationId = pref.getValue("customerParentOrganizationId", "");
-        if(customerParentOrganizationId != null) {
+/*        if(customerParentOrganizationId.isEmpty()) {
             customerOrgId = Long.parseLong(customerParentOrganizationId);	
         } else {
         	System.out.println("No Customer Parent Organization Id found.");
         }
-        
+*/
+    System.out.println("Customer parent organization id: "+customerParentOrganizationId);
         List<Organization> customers = new ArrayList<Organization>();
         
         List<Organization> companyOrganizations = OrganizationLocalServiceUtil.getOrganizations(QueryUtil.ALL_POS, QueryUtil.ALL_POS);

@@ -17,8 +17,15 @@ $(function() {
     $( "#opener" ).click(function() {
        $( "#makeAnnouncementDialog" ).dialog( "open" );
     });
-    console.log("We're over here");
  });
 
+$(function() {
+    $( "#adminMakeAnnouncementDialog" ).dialog({
+       autoOpen: false,  
+    });
+    $( "#adminMakeAnnouncementOpener" ).click(function() {
+       $( "#adminMakeAnnouncementDialog" ).dialog( "open" );
+    });
+ });
 
 </script>

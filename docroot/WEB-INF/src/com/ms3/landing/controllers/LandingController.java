@@ -80,7 +80,9 @@ public class LandingController extends MVCPortlet {
 			renderRequest.setAttribute("customerName", OrganizationLocalServiceUtil.getOrganization(customerOrgId).getName());
 			
 			Organization customerOrg = OrganizationLocalServiceUtil.getOrganization(customerOrgId);
-			serviceDeskID = (String)customerOrg.getExpandoBridge().getAttribute("jiraServiceDeskId");
+	//TO EDIT LATER
+			serviceDeskID= "2";
+			//serviceDeskID = (String)customerOrg.getExpandoBridge().getAttribute("jiraServiceDeskId");
 			
 			restService = new RestServices(prefs.getValue(
 					"ticketListEndPoint", StringPool.BLANK));
@@ -113,7 +115,9 @@ public class LandingController extends MVCPortlet {
 				
 				requestTypes = restService2.getRequestTypes(serviceDeskID);
 			} catch(Exception e){
-				openTickets = new ArrayList<OpenTickets>();
+				//to EDIT
+				System.out.println("Uh-oh, you got caught!");
+				//openTickets = new ArrayList<OpenTickets>();
 				requestTypes = new ArrayList<RequestType>();
 			}
 			

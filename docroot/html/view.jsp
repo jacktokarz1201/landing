@@ -29,6 +29,7 @@
 			<th>Title</th>
 			<th>Content</th>
 			<th>Date</th>
+			<th>Author</th>
 		</tr>
 	</thead>
 	<tbody>
@@ -39,6 +40,7 @@
 			<td><%= announcement.getTitle() %></td>
 			<td><%= announcement.getContent() %></td>
 			<td><%= announcement.getSetDate() %></td>
+			<td><%= announcement.getAuthor() %></td>
 		</tr>
 <%
 	}
@@ -93,12 +95,12 @@
 <div>
 	<h2>This is for a different page, for the Admin</h2>
 
-	<div id = "giveAnnouncementDialog" title = "Announcement Creation">
+	<div id = "adminMakeAnnouncementDialog" title = "Announcement Creation">
 		<aui:form cssClass="inputForm" name="giveAnnouncement" action="<%=addAnnouncement%>">
 			<aui:input cssClass="normalInput" name="title" label="Title" type="text"/>
 			<aui:input class="normalInput" name="content" label="Content" type="textarea"/>
 			<aui:select name="author" label="Reader(s)">
-				<aui:option value="All"></aui:option>
+				<aui:option label="Everybody" value="Everybody"></aui:option>
 <%
 			if(customers.size()>1) {				
 				for(Organization org: customers) {
