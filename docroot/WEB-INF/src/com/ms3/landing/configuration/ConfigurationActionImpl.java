@@ -7,16 +7,18 @@ import javax.portlet.PortletPreferences;
 import javax.portlet.RenderRequest;
 import javax.portlet.RenderResponse;
 
-import com.liferay.portal.kernel.portlet.ConfigurationAction;
+import com.liferay.portal.kernel.portlet.DefaultConfigurationAction;
 import com.liferay.portal.kernel.servlet.SessionErrors;
 import com.liferay.portal.kernel.servlet.SessionMessages;
 import com.liferay.portal.kernel.util.ParamUtil;
 import com.liferay.portlet.PortletPreferencesFactoryUtil;
 
-public class ConfigurationActionImpl implements ConfigurationAction{
+public class ConfigurationActionImpl extends DefaultConfigurationAction{
 	
+	@Override
 	public void processAction(PortletConfig config, ActionRequest actionRequest, ActionResponse actionResponse) throws Exception { 
 			
+		super.processAction(config, actionRequest, actionResponse);
 			try{
 					 
 				String ticketStatusEndPoint = ParamUtil.getString(actionRequest,
@@ -77,6 +79,7 @@ public class ConfigurationActionImpl implements ConfigurationAction{
 			  //System.out.println("confugiration action: " + recruitmentApiEndPoint + employeeApiEndPoint + recruitToEmployeeApiEndPoint);
 			  
 			  SessionMessages.add(actionRequest, "config-stored");
+			  System.out.println("Parent Org id: "+customerParentOrganizationId);
 			  
 			}
 			catch(Exception e){
@@ -84,11 +87,11 @@ public class ConfigurationActionImpl implements ConfigurationAction{
 			}		  
 			  
 	}
-	
+/*
 	public String render(PortletConfig portletConfig,RenderRequest renderRequest, RenderResponse renderResponse) throws Exception {
 
 		return "/WEB-INF/jsp/config.jsp";
 	}
-		
+*/	
 
 }

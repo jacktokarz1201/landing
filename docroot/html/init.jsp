@@ -12,6 +12,9 @@
 <%@page import="com.liferay.portal.model.Organization" %>
 <%@page import="com.liferay.portal.service.OrganizationLocalServiceUtil" %>
 <%@ page import= "com.liferay.portal.service.UserLocalServiceUtil" %>
+<%@page import= "com.ms3.landing.service.model.Announcement" %>
+<%@page import= "com.ms3.landing.service.service.AnnouncementLocalServiceUtil" %>
+<%@ page import= "com.ms3.landing.services.PortletServices" %>
 
 <%@include file="/html/scripts.jsp" %>
 

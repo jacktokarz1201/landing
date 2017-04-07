@@ -21,5 +21,11 @@
 	<classpathentry kind="lib" path="C:/Users/John/Documents/sandbox/portalRepo/trouble ticket/trouble-ticket-portlet/docroot/WEB-INF/lib/okhttp.jar"/>
 	<classpathentry kind="lib" path="C:/Users/John/Documents/liferay/liferay-plugins-sdk-6.2/portlets/training-portlet/docroot/WEB-INF/lib/gson-2.7.jar"/>
 	<classpathentry kind="lib" path="C:/Users/John/Documents/liferay/liferay-plugins-sdk-6.2/portlets/training-portlet/docroot/WEB-INF/lib/json-20160810.jar"/>
+	<classpathentry kind="lib" path="C:/Users/John/Documents/liferay/liferay-portal-6.2-ce-ga2/tomcat-7.0.42/lib/ext/portal-service.jar"/>
+	<classpathentry kind="lib" path="C:/Users/John/Documents/liferay/liferay-portal-6.2-ce-ga4/tomcat-7.0.42/lib/ext/portal-service.jar">
+		<attributes>
+			<attribute name="javadoc_location" value=""/>
+		</attributes>
+	</classpathentry>
 	<classpathentry kind="output" path="docroot/WEB-INF/classes"/>
 </classpath>

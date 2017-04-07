@@ -85,9 +85,14 @@ public class PortletServices {
     
     public List<Organization> getCustomers(RenderRequest request) throws SystemException{
         
-        PortletPreferences pref = request.getPreferences(); 
+        PortletPreferences pref = request.getPreferences();
+        long customerOrgId = 0;
         String customerParentOrganizationId = pref.getValue("customerParentOrganizationId", "");
-        long customerOrgId = Long.parseLong(customerParentOrganizationId);
+        if(customerParentOrganizationId != null) {
+            customerOrgId = Long.parseLong(customerParentOrganizationId);	
+        } else {
+        	System.out.println("No Customer Parent Organization Id found.");
+        }
         
         List<Organization> customers = new ArrayList<Organization>();
         

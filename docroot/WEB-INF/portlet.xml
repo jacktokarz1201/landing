@@ -18,9 +18,9 @@
 			<mime-type>text/html</mime-type>
 		</supports>
 		<portlet-info>
-			<title>Landing</title>
-			<short-title>Landing</short-title>
-			<keywords>Landing</keywords>
+			<title>landing</title>
+			<short-title>landing</short-title>
+			<keywords>landing</keywords>
 		</portlet-info>
 		<security-role-ref>
 			<role-name>administrator</role-name>

@@ -11,12 +11,13 @@ $(document).ready(function() {
 } );
 
 $(function() {
-    $( "#makeAssignmentDialog" ).dialog({
+    $( "#makeAnnouncementDialog" ).dialog({
        autoOpen: false,  
     });
     $( "#opener" ).click(function() {
-       $( "#makeAssignmentDialog" ).dialog( "open" );
+       $( "#makeAnnouncementDialog" ).dialog( "open" );
     });
+    console.log("We're over here");
  });
 
 

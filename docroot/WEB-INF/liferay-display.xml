@@ -3,6 +3,6 @@
 
 <display>
 	<category name="MS3">
-		<portlet id="Landing Page" />       
+		<portlet id="landing" />       
 	</category>
 </display>
