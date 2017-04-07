@@ -49,20 +49,11 @@ public class LandingController extends MVCPortlet {
 	public String processRenderRequest(RenderRequest renderRequest,
 			RenderResponse renderResponse, Model model) throws Exception {
 		
-		System.out.println("loading...");
-		
-		return "view";
-	}
-	
-	@Override
-	public void doView(RenderRequest renderRequest,
-			RenderResponse renderResponse) throws IOException, PortletException {
-		
-		
 		System.out.println("over here...");
 		
 		String serviceDeskID = "";
 		String ticketNo =  renderRequest.getParameter("jsdticketID");
+	//EDIT later
 		long customerOrgId= 0;
 		String selectedStatus = renderRequest.getParameter("selectedStatus");
 		
@@ -73,26 +64,29 @@ public class LandingController extends MVCPortlet {
 		PortletPreferences prefs = renderRequest.getPreferences();
 		ThemeDisplay themeDisplay = (ThemeDisplay) renderRequest.getAttribute(WebKeys.THEME_DISPLAY);
 		User user = themeDisplay.getUser();
-		
+		String customerParentOrganizationId = prefs.getValue("customerParentOrganizationId", "");
+		if(customerParentOrganizationId.isEmpty()) {
+			return "view";
+		}
 		try {
-			String customerParentOrganizationId = prefs.getValue("customerParentOrganizationId", "");
-			customerOrgId = portletServices.getClientId(user, OrganizationLocalServiceUtil.getOrganization(Long.parseLong(customerParentOrganizationId)).getName());					
-			renderRequest.setAttribute("customerName", OrganizationLocalServiceUtil.getOrganization(customerOrgId).getName());
+		//EDIT LATER
+			//String customerParentOrganizationId = prefs.getValue("customerParentOrganizationId", "");
+			//customerOrgId = portletServices.getClientId(user, OrganizationLocalServiceUtil.getOrganization(Long.parseLong(customerParentOrganizationId)).getName());					
+			//renderRequest.setAttribute("customerName", OrganizationLocalServiceUtil.getOrganization(customerOrgId).getName());
 			
-			Organization customerOrg = OrganizationLocalServiceUtil.getOrganization(customerOrgId);
+			//Organization customerOrg = OrganizationLocalServiceUtil.getOrganization(customerOrgId);
 	//TO EDIT LATER
 			serviceDeskID= "2";
 			//serviceDeskID = (String)customerOrg.getExpandoBridge().getAttribute("jiraServiceDeskId");
-			
-			restService = new RestServices(prefs.getValue(
-					"ticketListEndPoint", StringPool.BLANK));
+		System.out.println("Ticket list end point: "+prefs.getValue("ticektListEndPoint", StringPool.BLANK));	
+			restService = new RestServices(prefs.getValue("ticketListEndPoint", StringPool.BLANK));
 			restService2 = new RestServices(prefs.getValue(
 					"requestTypeEndPoint", StringPool.BLANK));
 			List<OpenTickets> openTickets = null;
 			List<RequestType> requestTypes = null;
 			try {
-				openTickets = restService
-						.getTicketList(serviceDeskID);
+				openTickets = restService.getTicketList(serviceDeskID);
+		System.out.println("Open tickets are: "+openTickets);
 				List<OpenTickets> openTicketFilteredByStatus = new ArrayList<OpenTickets>();
 				try{
 					
@@ -215,7 +209,7 @@ public class LandingController extends MVCPortlet {
 	
 
 		
-		super.doView(renderRequest, renderResponse);
+		return "view";
 	}
 	
 	

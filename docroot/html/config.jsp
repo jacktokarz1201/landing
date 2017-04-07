@@ -80,6 +80,10 @@ String opsSupportOrganizationId = portletPreferences.getValue("opsSupportOrganiz
 						<aui:input label="Delete Attachment EndPoint<br><small>Example: http://52.201.204.44:8081/trouble-ticket-api/deleteAttachment/</small>" id="deleteAttachmentEndPoint" style="width:70%" name="deleteAttachmentEndPoint" value="<%=deleteAttachmentEndPoint%>" type="text">
 						</aui:input>
 						
+						
+						
+		<aui:input label="Important Organization Name" name="parentOrgName" ></aui:input>
+						
 						<aui:button-row>
 							<aui:button type="submit" value="Save"></aui:button>
 						</aui:button-row>

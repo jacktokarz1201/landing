@@ -18,6 +18,8 @@ public class ConfigurationActionImpl extends DefaultConfigurationAction{
 	@Override
 	public void processAction(PortletConfig config, ActionRequest actionRequest, ActionResponse actionResponse) throws Exception { 
 			
+		System.out.println("In the action impl");
+		
 		super.processAction(config, actionRequest, actionResponse);
 			try{
 					 
@@ -55,6 +57,9 @@ public class ConfigurationActionImpl extends DefaultConfigurationAction{
 				String opsSupportOrganizationId = ParamUtil.getString(actionRequest,
 						"opsSupportOrganizationId");
 				
+				
+		String parentOrgName = ParamUtil.getString(actionRequest, "parentOrgName");
+				
 				String portletResource = ParamUtil.getString(actionRequest, "portletResource");			 
 				PortletPreferences prefs = PortletPreferencesFactoryUtil.getPortletSetup(actionRequest, portletResource);
 
@@ -72,7 +77,8 @@ public class ConfigurationActionImpl extends DefaultConfigurationAction{
 				prefs.setValue("editTicketEndPoint", editTicketEndPoint);
 				prefs.setValue("deleteAttachmentEndPoint", deleteAttachmentEndPoint);
 				prefs.setValue("opsSupportOrganizationId", opsSupportOrganizationId);		
-				prefs.setValue("customerParentOrganizationId", customerParentOrganizationId);		
+				prefs.setValue("customerParentOrganizationId", customerParentOrganizationId);
+		prefs.setValue("parentOrgName", parentOrgName);
 				prefs.store();
 				
 			  SessionMessages.add(actionRequest, config.getPortletName() + ".doConfigure");
@@ -80,6 +86,7 @@ public class ConfigurationActionImpl extends DefaultConfigurationAction{
 			  
 			  SessionMessages.add(actionRequest, "config-stored");
 			  System.out.println("Parent Org id: "+customerParentOrganizationId);
+			  System.out.println("ticketListEndPoint is:"+ticketListEndPoint);
 			  
 			}
 			catch(Exception e){
