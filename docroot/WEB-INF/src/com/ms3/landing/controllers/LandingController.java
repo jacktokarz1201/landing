@@ -49,14 +49,7 @@ public class LandingController extends MVCPortlet {
 	public String processRenderRequest(RenderRequest renderRequest,
 			RenderResponse renderResponse, Model model) throws Exception {
 		
-		System.out.println("over here...");
-		
-		String serviceDeskID = "";
-		String ticketNo =  renderRequest.getParameter("jsdticketID");
-	//EDIT later
-		long customerOrgId= 0;
-		String selectedStatus = renderRequest.getParameter("selectedStatus");
-		
+System.out.println("over here...");
 		
 		PortletServices portletServices = new PortletServices();
 		RestServices restService;
@@ -66,30 +59,33 @@ public class LandingController extends MVCPortlet {
 		User user = themeDisplay.getUser();
 		try {
 		//EDIT LATER
+			String companyId = Long.toString(user.getCompanyId());
+	if(companyId.isEmpty()) {
+		companyId = "20154";
+	}
+			prefs.setValue("companyId", companyId);
 			String customerParentOrganizationId = prefs.getValue("customerParentOrganizationId", "");
-			String companyId= prefs.getValue("companyId", "");
-			if(companyId.isEmpty()) {
-				companyId = "20154";
-				prefs.setValue("companyId", companyId);
-			}
-			if(customerParentOrganizationId.isEmpty()) {
-				customerParentOrganizationId= "39104";
-				prefs.setValue("customerParentOrganizationId", customerParentOrganizationId);
-			}
-			customerOrgId = portletServices.getClientId(user, OrganizationLocalServiceUtil.getOrganization(Long.parseLong(customerParentOrganizationId)).getName());					
+	if(customerParentOrganizationId.isEmpty()) {
+		customerParentOrganizationId= "39104";
+	}
+			prefs.setValue("customerParentOrganizationId", customerParentOrganizationId);
+			long customerOrgId = portletServices.getClientId(user, 
+					OrganizationLocalServiceUtil.getOrganization(Long.parseLong(customerParentOrganizationId)).getName(), renderRequest);					
 			
 			prefs.setValue("customerOrgId", Long.toString(customerOrgId));
 		List<Organization> orgs = OrganizationLocalServiceUtil.getOrganizations(0, OrganizationLocalServiceUtil.getOrganizationsCount());
-			renderRequest.setAttribute("customerName", OrganizationLocalServiceUtil.getOrganization(orgs.get(1).getOrganizationId()).getName());
-			//Organization customerOrg = OrganizationLocalServiceUtil.getOrganization(customerOrgId);
+			Organization customerOrg = OrganizationLocalServiceUtil.getOrganization(customerOrgId);
+			renderRequest.setAttribute("customerName", customerOrg.getName());
 	//TO EDIT LATER
-			serviceDeskID= "2";
+			String serviceDeskID = "";
+			//String ticketNo =  renderRequest.getParameter("jsdticketID");
+		//EDIT later
+			String selectedStatus = renderRequest.getParameter("selectedStatus");
+	serviceDeskID= "2";
+	//String ticketNo = "2";
 			//serviceDeskID = (String)customerOrg.getExpandoBridge().getAttribute("jiraServiceDeskId");
-		System.out.println("Ticket list end point: "+prefs.getValue("ticketListEndPoint", ""));	
+		prefs.setValue("serviceDeskID", serviceDeskID);
 		prefs.store();
-		if(true) {
-		return "view";
-		}
 		
 			restService = new RestServices(prefs.getValue("ticketListEndPoint", ""));
 		System.out.println("Request Type: "+prefs.getValue("requestTypeEndPoint", StringPool.BLANK));
@@ -131,46 +127,45 @@ public class LandingController extends MVCPortlet {
 			renderRequest.setAttribute("requestTypes", requestTypes);
 			renderRequest.setAttribute("serviceDeskID", serviceDeskID);
 			
-			
+	System.out.println("After setting soem stuff.");
+			/*
 			TicketStatus searchedTicket = new TicketStatus();
 			
-			List<Comment> ticketComments = null;
-			List<Attachment> ticketAttachments = null;
+			List<Comment> ticketComments = new ArrayList<Comment>();
+			List<Attachment> ticketAttachments = new ArrayList<Attachment>();
 			
 			OpenTickets selectedOpenTicket = null;
-			String formattedDate = null;
+			String formattedDate = "";
 			String ticketStatus = "";
 			try{
-			
-			if(!ticketNo.isEmpty()){
-				
-				
 				for(OpenTickets ticket: openTickets){
-					if(ticket.getJsd_ticketID().equalsIgnoreCase(ticketNo)){
-						selectedOpenTicket = ticket;
-						try {
-						restService = new RestServices(prefs.getValue("getTicketDetailsEndPoint", StringPool.BLANK));
-						selectedOpenTicket = restService.getTicketDetails(ticketNo); // delete
-						//System.out.println("=====================" + selectedOpenTicket);
-						
-						restService = new RestServices(prefs.getValue("getCommentsEndPoint", StringPool.BLANK));
-						ticketComments = restService.getComments(ticketNo);
-						//System.out.println("=====================" + ticketComments);
-						
-						restService = new RestServices(prefs.getValue("getAttachmentsByTicketIDEndPoint", StringPool.BLANK));
-						ticketAttachments = restService.getAttachments(ticketNo);
-						//System.out.println("=========ATTACHMENTS============" + ticketAttachments);
-						
-						restService = new RestServices(prefs.getValue("ticketStatusEndPoint", StringPool.BLANK));
-						searchedTicket = restService.getTicketStatus(ticketNo.toLowerCase().toUpperCase());	
-						//System.out.println("=====================" + searchedTicket);
-						}
-						catch(Exception e){
-							e.printStackTrace();
-						}
-						break;
-					}						
-				}
+					String ticketNo = openTickets.get(0).getJsd_ticketID();
+					if(!ticketNo.isEmpty()){
+						if(ticket.getJsd_ticketID().equalsIgnoreCase(ticketNo)){
+							selectedOpenTicket = ticket;
+							try {
+							restService = new RestServices(prefs.getValue("getTicketDetailsEndPoint", StringPool.BLANK));
+							selectedOpenTicket = restService.getTicketDetails(ticketNo); // delete
+							System.out.println("=====================" + selectedOpenTicket);
+							
+							restService = new RestServices(prefs.getValue("getCommentsEndPoint", StringPool.BLANK));
+							ticketComments = restService.getComments(ticketNo);
+							//System.out.println("=====================" + ticketComments);
+							
+							restService = new RestServices(prefs.getValue("getAttachmentsByTicketIDEndPoint", StringPool.BLANK));
+							ticketAttachments = restService.getAttachments(ticketNo);
+							//System.out.println("=========ATTACHMENTS============" + ticketAttachments);
+							
+							restService = new RestServices(prefs.getValue("ticketStatusEndPoint", StringPool.BLANK));
+							searchedTicket = restService.getTicketStatus(ticketNo.toLowerCase().toUpperCase());	
+							//System.out.println("=====================" + searchedTicket);
+							}
+							catch(Exception e){
+								e.printStackTrace();
+							}
+							break;
+						}						
+					}
 				
 				ticketStatus = searchedTicket.getTicketStatus();
 				String ms = searchedTicket.getTicketStatusDateTime();
@@ -178,39 +173,53 @@ public class LandingController extends MVCPortlet {
 				SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
 				formattedDate = sdf.format(date);
 				
+				renderRequest.setAttribute("ticketStatus", ticketStatus);
+				renderRequest.setAttribute("formattedDate", formattedDate);
+				renderRequest.setAttribute("ticketSelected", selectedOpenTicket.toString());
+				renderRequest.setAttribute("ticketComments", ticketComments.toString());
+				renderRequest.setAttribute("ticketAttachments", ticketAttachments.toString());
 				
-				
-				SessionMessages.add(renderRequest,PortalUtil.getPortletId(renderRequest)+ SessionMessages.KEY_SUFFIX_HIDE_DEFAULT_SUCCESS_MESSAGE);
-			}else{
-				searchedTicket = null;
+				//SessionMessages.add(renderRequest,PortalUtil.getPortletId(renderRequest)+ SessionMessages.KEY_SUFFIX_HIDE_DEFAULT_SUCCESS_MESSAGE);
 			}
+			System.out.println("Ending looooop?");
 			
 			}catch(Exception e){
 				//e.printStackTrace();
 				searchedTicket = null;
-			}			
+			}
+			*/
+	System.out.println("set stuff");
+	
+	renderRequest.setAttribute("ticketAttachmentsEndPoint", prefs.getValue("getAttachmentEndPoint", StringPool.BLANK));
+	
+	
+	
+		} catch (NullPointerException e) {
+			e.printStackTrace();
+			prefs.setValue("error", "This user is not assigned to an Organization.");
+			return "error";
 			
-			renderRequest.setAttribute("ticketStatus", ticketStatus);
-			renderRequest.setAttribute("formattedDate", formattedDate);
-			renderRequest.setAttribute("ticketSelected", selectedOpenTicket);
-			renderRequest.setAttribute("ticketComments", ticketComments);
-			renderRequest.setAttribute("ticketAttachments", ticketAttachments);
-			renderRequest.setAttribute("ticketAttachmentsEndPoint", prefs.getValue("getAttachmentEndPoint", StringPool.BLANK));
-			
-		} catch (Exception e) {
+		} 
+	/*
+		catch (Exception e) {
 			e.printStackTrace();
 			SessionErrors.add(renderRequest, "error");
 			SessionErrors.add(renderRequest, "please-configure");
 			SessionMessages.add(renderRequest,PortalUtil.getPortletId(renderRequest)+ SessionMessages.KEY_SUFFIX_HIDE_DEFAULT_ERROR_MESSAGE);
 			List<OpenTickets> openTickets = new ArrayList<OpenTickets>();
 			List<RequestType> requestTypes = new ArrayList<RequestType>();
-			renderRequest.setAttribute("openTickets", openTickets);
-			renderRequest.setAttribute("requestTypes", requestTypes);
+			renderRequest.setAttribute("openTickets", openTickets.toString());
+			renderRequest.setAttribute("requestTypes", requestTypes.toString());
 			renderRequest.setAttribute("serviceDeskID", serviceDeskID);
+			prefs.setValue("error", "There was an unexpected error.");
+			return "error";
 		}
 	
 	//set sort order by created date of search container
-	try{		
+		
+	 /*Why would they just set something the same as it is?
+		
+		try{		
 		//System.out.println("orderByType: "+renderRequest.getParameter("orderByType"));
 		renderRequest.setAttribute("orderByType", renderRequest.getParameter("orderByType"));			
 	}catch(Exception e){}
@@ -218,11 +227,12 @@ public class LandingController extends MVCPortlet {
 		renderRequest.setAttribute("delta", renderRequest.getParameter("delta"));
 		
 	}catch(Exception e){}
-	
+	*/
 
-		
 		return "view";
+		
 	}
+	
 	
 	
 	@ActionMapping(params = "action=addAnnouncement")

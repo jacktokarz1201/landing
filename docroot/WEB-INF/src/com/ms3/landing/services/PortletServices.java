@@ -34,12 +34,14 @@ public class PortletServices {
         throw new NullPointerException();
     }
     
-    public long getClientId(User user, String parentOrgName) throws PortalException, SystemException, NullPointerException{
+    public long getClientId(User user, String parentOrgName, RenderRequest renderRequest) throws PortalException, SystemException, NullPointerException{
         
+    	PortletPreferences prefs = renderRequest.getPreferences();
+    	
         List<Organization> organizations = OrganizationLocalServiceUtil.getOrganizations(user.getUserId(), 0, QueryUtil.ALL_POS, null);
-        Long companyId = CompanyThreadLocal.getCompanyId();
+        Long companyId = Long.parseLong(prefs.getValue("companyId", ""));
         Organization customerParentOrg = OrganizationLocalServiceUtil.getOrganization(companyId, parentOrgName);
-                    
+                    //this seems excessive? don't we already have the Org in the line above?
         for(Organization org: organizations){
             //System.out.println("Organization: "+org.toString());
             if(org.getParentOrganizationId()==customerParentOrg.getOrganizationId()){                   

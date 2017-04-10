@@ -17,6 +17,11 @@
 <%@page import= "com.ms3.landing.service.model.Announcement" %>
 <%@page import= "com.ms3.landing.service.service.AnnouncementLocalServiceUtil" %>
 <%@ page import= "com.ms3.landing.services.PortletServices" %>
+<%@ page import= "com.ms3.landing.services.RestServices" %>
+<%@ page import= "com.ms3.landing.tickets.OpenTickets" %>
+<%@ page import= "com.ms3.landing.tickets.TicketStatus" %>
+<%@ page import= "com.ms3.landing.tickets.Attachment" %>
+<%@ page import= "com.ms3.landing.tickets.Comment" %>
 
 <%@include file="/html/scripts.jsp" %>
 
