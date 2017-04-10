@@ -84,25 +84,17 @@ public class PortletServices {
     }
     
     public List<Organization> getCustomers(RenderRequest request) throws SystemException{
-        
-        PortletPreferences pref = request.getPreferences();
-        long customerOrgId = 0;
-        String customerParentOrganizationId = pref.getValue("customerParentOrganizationId", "");
-/*        if(customerParentOrganizationId.isEmpty()) {
-            customerOrgId = Long.parseLong(customerParentOrganizationId);	
-        } else {
-        	System.out.println("No Customer Parent Organization Id found.");
-        }
-*/
-    System.out.println("Customer parent organization id: "+customerParentOrganizationId);
+   //revised by Jack. Shortened.
+        PortletPreferences prefs = request.getPreferences();
+        String customerParentOrganizationId = prefs.getValue("customerParentOrganizationId", "");
+        List<Organization> organizations= OrganizationLocalServiceUtil.getOrganizations(0, OrganizationLocalServiceUtil.getOrganizationsCount());
         List<Organization> customers = new ArrayList<Organization>();
-        
-        List<Organization> companyOrganizations = OrganizationLocalServiceUtil.getOrganizations(QueryUtil.ALL_POS, QueryUtil.ALL_POS);
-        for(Organization org: companyOrganizations){
-            if(org.getParentOrganizationId()==customerOrgId){
-                customers.add(org);
-            }
+        for(Organization org: organizations) {
+        	if(org.getParentOrganizationId()==Long.parseLong(customerParentOrganizationId)) {
+        		customers.add(org);
+        	}
         }
+         //   		 getSuborganizations(Long.parseLong(prefs.getValue("companyId", "")), Long.parseLong(customerParentOrganizationId));	
         
         return customers;
     }

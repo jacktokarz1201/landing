@@ -4,6 +4,8 @@
 <%@ taglib uri="http://alloy.liferay.com/tld/aui" prefix="aui" %>
 
 <%@page import="java.util.List" %>
+<%@ page import= "java.util.ArrayList" %>
+<%@ page import= "javax.portlet.PortletPreferences" %>
 <%@ page import= "com.liferay.portal.theme.ThemeDisplay" %>
 <%@ page import= "com.liferay.portal.kernel.util.WebKeys" %>
 <%@ page import= "com.liferay.portal.kernel.util.StringPool" %>
@@ -22,5 +24,5 @@
 
 <%
 	ThemeDisplay themeDisplay = (ThemeDisplay) request.getAttribute(WebKeys.THEME_DISPLAY);
-	
+	PortletPreferences prefs = renderRequest.getPreferences();
 %>

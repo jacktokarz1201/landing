@@ -12,10 +12,18 @@
 	List<Organization> customers = portletServices.getCustomers(renderRequest);
 	User user = themeDisplay.getUser();
 	String openTickets = (String)renderRequest.getAttribute("openTickets");
+	String customerOrgId = (String)prefs.getValue("customerOrgId", "");
+	String customerParentOrganizationId = prefs.getValue("customerParentOrganizationId", "");
 	List<Announcement> announcements = AnnouncementLocalServiceUtil.getAnnouncements(0, AnnouncementLocalServiceUtil.getAnnouncementsCount());
+	List<Announcement> yourAnnouncements = new ArrayList<Announcement>();
+	for(Announcement announcement: announcements) {
+		if(announcement.getAuthor().equals(customerOrgId) || announcement.getAuthor().equals("Everybody")) {
+			yourAnnouncements.add(announcement);
+		}
+	}
 %>
 
-<div>Welcome <%= user.getFullName() %></div>
+<div>Welcome <%= user.getFullName() %> of Organization <%= customerOrgId %></div>
 
 <div>Logo!</div>
 
@@ -34,7 +42,7 @@
 	</thead>
 	<tbody>
 <%
-	for(Announcement announcement: announcements) {
+	for(Announcement announcement: yourAnnouncements) {
 %>
 		<tr>
 			<td><%= announcement.getTitle() %></td>
@@ -102,7 +110,7 @@
 			<aui:select name="author" label="Reader(s)">
 				<aui:option label="Everybody" value="Everybody"></aui:option>
 <%
-			if(customers.size()>1) {				
+			if(customers.size()>=1) {				
 				for(Organization org: customers) {
 %>
 					<aui:option label="<%= org.getName() %>" value="<%= org.getOrganizationId() %>" />

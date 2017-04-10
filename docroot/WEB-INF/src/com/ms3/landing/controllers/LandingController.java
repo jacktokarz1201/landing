@@ -64,24 +64,36 @@ public class LandingController extends MVCPortlet {
 		PortletPreferences prefs = renderRequest.getPreferences();
 		ThemeDisplay themeDisplay = (ThemeDisplay) renderRequest.getAttribute(WebKeys.THEME_DISPLAY);
 		User user = themeDisplay.getUser();
-		String customerParentOrganizationId = prefs.getValue("customerParentOrganizationId", "");
-		if(customerParentOrganizationId.isEmpty()) {
-			return "view";
-		}
 		try {
 		//EDIT LATER
-			//String customerParentOrganizationId = prefs.getValue("customerParentOrganizationId", "");
-			//customerOrgId = portletServices.getClientId(user, OrganizationLocalServiceUtil.getOrganization(Long.parseLong(customerParentOrganizationId)).getName());					
-			//renderRequest.setAttribute("customerName", OrganizationLocalServiceUtil.getOrganization(customerOrgId).getName());
+			String customerParentOrganizationId = prefs.getValue("customerParentOrganizationId", "");
+			String companyId= prefs.getValue("companyId", "");
+			if(companyId.isEmpty()) {
+				companyId = "20154";
+				prefs.setValue("companyId", companyId);
+			}
+			if(customerParentOrganizationId.isEmpty()) {
+				customerParentOrganizationId= "39104";
+				prefs.setValue("customerParentOrganizationId", customerParentOrganizationId);
+			}
+			customerOrgId = portletServices.getClientId(user, OrganizationLocalServiceUtil.getOrganization(Long.parseLong(customerParentOrganizationId)).getName());					
 			
+			prefs.setValue("customerOrgId", Long.toString(customerOrgId));
+		List<Organization> orgs = OrganizationLocalServiceUtil.getOrganizations(0, OrganizationLocalServiceUtil.getOrganizationsCount());
+			renderRequest.setAttribute("customerName", OrganizationLocalServiceUtil.getOrganization(orgs.get(1).getOrganizationId()).getName());
 			//Organization customerOrg = OrganizationLocalServiceUtil.getOrganization(customerOrgId);
 	//TO EDIT LATER
 			serviceDeskID= "2";
 			//serviceDeskID = (String)customerOrg.getExpandoBridge().getAttribute("jiraServiceDeskId");
-		System.out.println("Ticket list end point: "+prefs.getValue("ticektListEndPoint", StringPool.BLANK));	
-			restService = new RestServices(prefs.getValue("ticketListEndPoint", StringPool.BLANK));
-			restService2 = new RestServices(prefs.getValue(
-					"requestTypeEndPoint", StringPool.BLANK));
+		System.out.println("Ticket list end point: "+prefs.getValue("ticketListEndPoint", ""));	
+		prefs.store();
+		if(true) {
+		return "view";
+		}
+		
+			restService = new RestServices(prefs.getValue("ticketListEndPoint", ""));
+		System.out.println("Request Type: "+prefs.getValue("requestTypeEndPoint", StringPool.BLANK));
+			restService2 = new RestServices(prefs.getValue("requestTypeEndPoint", StringPool.BLANK));
 			List<OpenTickets> openTickets = null;
 			List<RequestType> requestTypes = null;
 			try {
@@ -231,10 +243,10 @@ public class LandingController extends MVCPortlet {
 				request.setAttribute("addAnnouncementError", "Make sure to fill in all of the fields.");
 				return;
 			}
-			String author = request.getParameter("author");
-			if(author==null) {
-	//THIS IS AN ISSUE!
-				author = themeDisplay.getUser().getFullName();
+			String author = "";
+			author = request.getParameter("author");
+			if(author==null){
+				author = prefs.getValue("customerOrgId", "");
 			}
 			Date date= new Date();
 			
@@ -262,7 +274,7 @@ public class LandingController extends MVCPortlet {
 			announcement.setAuthor(author);
 			announcement.setSetDate(date);
 			AnnouncementLocalServiceUtil.updateAnnouncement(announcement);
-			System.out.println("Announcement made");
+	System.out.println("Made announcement number: "+highestId);
 			
 		} catch (Exception e) {
 			// TODO Auto-generated catch block

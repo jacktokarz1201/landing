@@ -52,14 +52,13 @@ public class ConfigurationActionImpl extends DefaultConfigurationAction{
 				String deleteAttachmentEndPoint = ParamUtil.getString(actionRequest,
 						"deleteAttachmentEndPoint");
 				
-				String customerParentOrganizationId = ParamUtil.getString(actionRequest,
-						"customerParentOrganizationId");
 				
 				String opsSupportOrganizationId = ParamUtil.getString(actionRequest,
 						"opsSupportOrganizationId");
 				
 				
 		String parentOrgName = ParamUtil.getString(actionRequest, "parentOrgName");
+		String customerParentOrganizationId = "39104";
 				
 				String portletResource = ParamUtil.getString(actionRequest, "portletResource");			 
 				PortletPreferences prefs = PortletPreferencesFactoryUtil.getPortletSetup(actionRequest, portletResource);
@@ -87,7 +86,7 @@ public class ConfigurationActionImpl extends DefaultConfigurationAction{
 			  
 			  SessionMessages.add(actionRequest, "config-stored");
 			  System.out.println("Parent Org id: "+customerParentOrganizationId);
-			  System.out.println("ticketListEndPoint is:"+ticketListEndPoint);
+			  System.out.println("ticketListEndPoint is:"+prefs.getValue("ticketListEndPoint", ""));
 			  System.out.println("parent org name is:"+parentOrgName);
 			  
 			}
