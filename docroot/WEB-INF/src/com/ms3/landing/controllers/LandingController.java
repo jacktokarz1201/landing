@@ -12,7 +12,10 @@ import javax.portlet.PortletException;
 import javax.portlet.PortletPreferences;
 import javax.portlet.RenderRequest;
 import javax.portlet.RenderResponse;
+import javax.portlet.ResourceResponse;
 
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -29,6 +32,7 @@ import com.liferay.portal.service.OrganizationLocalServiceUtil;
 import com.liferay.portal.theme.ThemeDisplay;
 import com.liferay.portal.util.PortalUtil;
 import com.liferay.util.bridges.mvc.MVCPortlet;
+import com.ms3.landing.health.ApplicationHealth;
 import com.ms3.landing.service.model.Announcement;
 import com.ms3.landing.service.service.AnnouncementLocalServiceUtil;
 import com.ms3.landing.services.PortletServices;
@@ -49,7 +53,7 @@ public class LandingController extends MVCPortlet {
 	public String processRenderRequest(RenderRequest renderRequest,
 			RenderResponse renderResponse, Model model) throws Exception {
 		
-System.out.println("over here...");
+System.out.println("loading page...");
 		
 		PortletServices portletServices = new PortletServices();
 		RestServices restService;
@@ -57,18 +61,25 @@ System.out.println("over here...");
 		PortletPreferences prefs = renderRequest.getPreferences();
 		ThemeDisplay themeDisplay = (ThemeDisplay) renderRequest.getAttribute(WebKeys.THEME_DISPLAY);
 		User user = themeDisplay.getUser();
-		try {
-		//EDIT LATER
-			String companyId = Long.toString(user.getCompanyId());
+		System.out.println("User is default: "+user.isDefaultUser());
+		if(user.isDefaultUser()) {
+			prefs.setValue("error", "Log in to access this portlet");
+			return "error";
+		}
+		
+		String companyId = Long.toString(user.getCompanyId());
 	if(companyId.isEmpty()) {
+		System.out.println("no user company id");
 		companyId = "20154";
 	}
 			prefs.setValue("companyId", companyId);
 			String customerParentOrganizationId = prefs.getValue("customerParentOrganizationId", "");
 	if(customerParentOrganizationId.isEmpty()) {
+		System.out.println("no cust parent org id");
 		customerParentOrganizationId= "39104";
 	}
 			prefs.setValue("customerParentOrganizationId", customerParentOrganizationId);
+			prefs.store();
 			long customerOrgId = portletServices.getClientId(user, 
 					OrganizationLocalServiceUtil.getOrganization(Long.parseLong(customerParentOrganizationId)).getName(), renderRequest);					
 			
@@ -85,7 +96,41 @@ System.out.println("over here...");
 	//String ticketNo = "2";
 			//serviceDeskID = (String)customerOrg.getExpandoBridge().getAttribute("jiraServiceDeskId");
 		prefs.setValue("serviceDeskID", serviceDeskID);
+	//EDIT THIS!	
+		String applicationId = "1";
+		prefs.setValue("applicationId", applicationId);
+		
 		prefs.store();
+		
+		
+// Health Check stuff!
+	/* I moved it all into the view.html because that's where I'll need it anyway.
+
+		String healthCheckApiEndpoint = prefs.getValue("healthCheckApiEndpoint", "");			
+		//not sure how that's supposed to work...
+		//String applicationId = renderRequest.getParameter("applicationId");
+	
+if(!healthCheckApiEndpoint.isEmpty()) {
+	System.out.println("checking health...");
+	try{
+		restService = new RestServices(healthCheckApiEndpoint);
+		
+		ApplicationHealth healthResult = restService.checkHealth(applicationId);
+		
+		System.out.println(healthResult.toString());
+	} catch (Exception e) {
+		// TODO Auto-generated catch block			
+		renderResponse.setProperty(ResourceResponse.HTTP_STATUS_CODE, "500");
+		e.printStackTrace();
+		System.out.println("api endpoint error.");
+	}
+	
+}	
+	*/
+	
+//Ticket Stuff!
+		try {
+		//EDIT LATER
 		
 			restService = new RestServices(prefs.getValue("ticketListEndPoint", ""));
 		System.out.println("Request Type: "+prefs.getValue("requestTypeEndPoint", StringPool.BLANK));
@@ -94,7 +139,7 @@ System.out.println("over here...");
 			List<RequestType> requestTypes = null;
 			try {
 				openTickets = restService.getTicketList(serviceDeskID);
-		System.out.println("Open tickets are: "+openTickets);
+		//System.out.println("Open tickets are: "+openTickets);
 				List<OpenTickets> openTicketFilteredByStatus = new ArrayList<OpenTickets>();
 				try{
 					
@@ -127,7 +172,6 @@ System.out.println("over here...");
 			renderRequest.setAttribute("requestTypes", requestTypes);
 			renderRequest.setAttribute("serviceDeskID", serviceDeskID);
 			
-	System.out.println("After setting soem stuff.");
 			/*
 			TicketStatus searchedTicket = new TicketStatus();
 			
@@ -181,14 +225,12 @@ System.out.println("over here...");
 				
 				//SessionMessages.add(renderRequest,PortalUtil.getPortletId(renderRequest)+ SessionMessages.KEY_SUFFIX_HIDE_DEFAULT_SUCCESS_MESSAGE);
 			}
-			System.out.println("Ending looooop?");
 			
 			}catch(Exception e){
 				//e.printStackTrace();
 				searchedTicket = null;
 			}
 			*/
-	System.out.println("set stuff");
 	
 	renderRequest.setAttribute("ticketAttachmentsEndPoint", prefs.getValue("getAttachmentEndPoint", StringPool.BLANK));
 	

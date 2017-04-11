@@ -56,6 +56,9 @@ public class ConfigurationActionImpl extends DefaultConfigurationAction{
 				String opsSupportOrganizationId = ParamUtil.getString(actionRequest,
 						"opsSupportOrganizationId");
 				
+
+				String healthCheckApiEndpoint = ParamUtil.getString(actionRequest, "healthCheckApiEndpoint");	
+				
 				
 		String parentOrgName = ParamUtil.getString(actionRequest, "parentOrgName");
 		String customerParentOrganizationId = "39104";
@@ -76,7 +79,11 @@ public class ConfigurationActionImpl extends DefaultConfigurationAction{
 				prefs.setValue("attachFileEndPoint", attachFileEndPoint);
 				prefs.setValue("editTicketEndPoint", editTicketEndPoint);
 				prefs.setValue("deleteAttachmentEndPoint", deleteAttachmentEndPoint);
-				prefs.setValue("opsSupportOrganizationId", opsSupportOrganizationId);		
+
+				prefs.setValue("opsSupportOrganizationId", opsSupportOrganizationId);
+				
+				prefs.setValue("healthCheckApiEndpoint",healthCheckApiEndpoint);
+
 				prefs.setValue("customerParentOrganizationId", customerParentOrganizationId);
 		prefs.setValue("parentOrgName", parentOrgName);
 				prefs.store();

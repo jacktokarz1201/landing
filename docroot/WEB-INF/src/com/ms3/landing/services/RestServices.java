@@ -18,12 +18,17 @@ import java.util.regex.Pattern;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.client.RestTemplate;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.liferay.portal.kernel.exception.SystemException;
 import com.liferay.portal.model.User;
 import com.liferay.portal.service.UserLocalServiceUtil;
+import com.ms3.landing.health.ApplicationHealth;
+import com.ms3.landing.health.Integrations;
+import com.ms3.landing.health.Resources;
 import com.ms3.landing.tickets.Attachment;
 import com.ms3.landing.tickets.AttachmentList;
 import com.ms3.landing.tickets.Comment;
@@ -47,6 +52,8 @@ public class RestServices {
 //	private static String newTicketEndPoint = "http://52.201.204.44:8081/trouble-ticket-api/newTicket";
 	public String apiEndPoint;
 	public String apiEndPoint2;
+	
+	private RestTemplate restTemplate = new RestTemplate();
 
 	public RestServices() {
 		super();
@@ -82,6 +89,82 @@ public class RestServices {
 		return null;
 	}
 	
+	
+//Health check Stuff
+	
+	public ApplicationHealth checkHealth(String applicationId)
+			throws IllegalArgumentException, IOException, JSONException, ParseException {
+		
+		/*
+		String uri = apiEndPoint+"/health/"+applicationId;
+		java.net.URI url = null;		
+		try {
+			url = new java.net.URI(uri);
+		} catch (java.net.URISyntaxException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		//System.out.println("url: " + url);
+		ResponseEntity<String> healthCheckResult = restTemplate.getForEntity(url, String.class);
+		
+		*/
+		String json = null;
+		String uri = apiEndPoint+"/health/"+applicationId;
+		System.out.println("uri: "+uri);
+		try{
+			Response response =getJSON(uri);
+			json = response.body().string();
+		}catch(Exception e){
+			e.printStackTrace();
+			json = "";
+		}	
+
+		//System.out.println("json: " + json);
+			ApplicationHealth appHealth= new ApplicationHealth();
+			JSONObject obj = new JSONObject(json);
+			JSONArray jsonArray = null;
+			
+			int clientId = Integer.parseInt(obj.optString("clientId"));
+			appHealth.setClientId(clientId);
+			appHealth.setApplicationId(Integer.parseInt(obj.optString("applicationId")));
+			appHealth.setLast_poll_time(obj.optString("lastPollTime"));
+
+			jsonArray = obj.getJSONArray("integrations");
+			List<Integrations> listIntegrations = new ArrayList<Integrations>();
+			for(int y = 0; y < jsonArray.length(); y++) {
+				Integrations integration = new Integrations();
+				JSONObject ect = jsonArray.getJSONObject(y);
+				
+				integration.setType(ect.optString("type"));
+				integration.setStatus(ect.optString("status"));
+				integration.setName(ect.optString("name"));
+				listIntegrations.add(integration);
+			}
+			
+			appHealth.setIntegrations(listIntegrations);
+			
+			
+			jsonArray = obj.getJSONArray("resources");
+			List<Resources> listResources = new ArrayList<Resources>();
+			
+			for(int y = 0; y < jsonArray.length(); y++) {
+				Resources resource = new Resources();
+				JSONObject ect = jsonArray.getJSONObject(y);
+				
+				resource.setType(ect.optString("type"));
+				resource.setStatus(ect.optString("status"));
+				listResources.add(resource);
+			}
+			
+			appHealth.setResources(listResources);
+		
+		return appHealth;
+	}
+	
+	
+	
+	
+//Ticket Stuff
 	public String editDetails(Fields fields, String ticketId) {
 		//System.out.println("RestServices.editDetails()");
 		String status = null;

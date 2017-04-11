@@ -31,9 +31,13 @@ String serviceDeskID = "4";
 
 <div>Welcome <%= user.getFullName() %> of Organization <%= customerOrgId %> looking at tickets for desk <%= serviceDeskID %></div>
 
-<div>Logo!</div>
+<div>
+<h3>Logo!</h3>
+</div>
 
-<div>Contract Summary</div>
+<div>
+<h3>Contract Summary</h3>
+</div>
 
 <div class="tableHolder">
 <div class="tableTitle">News and Announcements</div>
@@ -78,7 +82,7 @@ String serviceDeskID = "4";
 
 
 <div class="tableHolder">
-<div class="tableTitle">Tickets</div>
+<div class="tableTitle">Tickets - Remember to setup serviceDeskId!</div>
 <table>
 	<thead>
 		<tr>
@@ -127,32 +131,106 @@ for(OpenTickets ticket: openTickets){
 				<td><%= ticket.getCreatedDate() %></td>
 				<td><%= ticket.getCurrentStatus() %></td>
 			</tr>			
-<%			
+<%
+	/*
 			System.out.println("Details: "+selectedOpenTicket.toString());
 			System.out.println("Comments: "+ticketComments.toString());
 			System.out.println("Attachments: "+ticketAttachments.toString());
 			System.out.println("Status: "+searchedTicket.toString());
 
 			System.out.println("===========================================");
+	*/
 		} catch(Exception e){
 			e.printStackTrace();
 		}
 	}						
 }
 %>
-		<tr>
-			<td>Example Ticket</td>
-			<td>This is an example that you are reading. Really, you don't need to keep reading this. You can stop anytime.</td>
-		</tr>
  
 	</tbody>
 </table>
 
+<!--  
 <div>Open tickets: <%= openTickets.toString() %></div>
+-->
 
 </div>
 
-<div>Health Check</div>
+<div>
+
+<%
+
+String healthCheckApiEndpoint = prefs.getValue("healthCheckApiEndpoint", "");
+String applicationId = prefs.getValue("applicationId", "");
+//not sure how that's supposed to work...
+//String applicationId = renderRequest.getParameter("applicationId");
+
+if(!healthCheckApiEndpoint.isEmpty()) {
+		System.out.println("checking health of application..."+applicationId);
+	try{
+		restService = new RestServices(healthCheckApiEndpoint);
+		
+		ApplicationHealth healthResult = restService.checkHealth(applicationId);
+		
+		//System.out.println(healthResult.toString()+"\n*********************************************");
+
+%>
+
+<div class="tableHolder">
+<div class="tableTitle">Health Check - Remember to setup applicationId!</div>
+<table>
+	<thead>
+		<tr>
+			<th>Client ID</th>
+			<th>Last Poll Time</th>
+<%
+			for(Resources resource: healthResult.getResources()) {
+%>
+			<th><%= resource.getType() %> Status</th>
+<%
+			}
+			
+			for(Integrations integration: healthResult.getIntegrations()) {
+%>
+				<th><%= integration.getName() %></th>
+<%
+			}
+%>
+		</tr>
+	</thead>
+
+	<tbody>
+		<tr>
+			<td><%= healthResult.getClientId() %></td>
+			<td><%= healthResult.getLast_poll_time() %></td>
+<%
+			for(Resources resource: healthResult.getResources()) {
+%>
+			<th><%= resource.getStatus() %></th>
+<%
+			}
+			
+			for(Integrations integration: healthResult.getIntegrations()) {
+%>
+				<th><%= integration.getStatus() %> Status</th>
+<%
+			}
+%>
+		</tr>
+	</tbody>
+</table>
+
+
+
+<%
+	} catch (Exception e) {
+		// TODO Auto-generated catch block
+		e.printStackTrace();
+		System.out.println("api endpoint error.");
+	}
+}
+%>
+</div>
 
 <div>
 	<h2>This is for a different page, for the Admin</h2>

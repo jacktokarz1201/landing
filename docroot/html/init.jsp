@@ -22,6 +22,9 @@
 <%@ page import= "com.ms3.landing.tickets.TicketStatus" %>
 <%@ page import= "com.ms3.landing.tickets.Attachment" %>
 <%@ page import= "com.ms3.landing.tickets.Comment" %>
+<%@ page import= "com.ms3.landing.health.ApplicationHealth" %>
+<%@ page import= "com.ms3.landing.health.Resources" %>
+<%@ page import= "com.ms3.landing.health.Integrations" %>
 
 <%@include file="/html/scripts.jsp" %>
 

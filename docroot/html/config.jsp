@@ -24,6 +24,9 @@ String opsSupportOrganizationId = portletPreferences.getValue("opsSupportOrganiz
 
 	List<Organization> companyOrganizations = OrganizationLocalServiceUtil.getOrganizations(QueryUtil.ALL_POS, QueryUtil.ALL_POS);
 	List<Organization> customers = (List<Organization>)request.getAttribute("customers");
+	
+
+String healthCheckApiEndpoint = portletPreferences.getValue("healthCheckApiEndpoint", "");
 %>
 
 <liferay-portlet:actionURL var="configurationURL" portletConfiguration="true" />
@@ -41,6 +44,8 @@ String opsSupportOrganizationId = portletPreferences.getValue("opsSupportOrganiz
 				<h3>API EndPoints</h3>
 					<aui:fieldset>
 					
+				<h2>Trouble Ticket Info</h2>
+						
 						<aui:input label="Ticket Status API EndPoint<br><small>Example: http://52.201.204.44:8081/trouble-ticket-api/ticketStatus</small>" id="ticketStatusEndPoint" style="width:70%" name="ticketStatusEndPoint" value="<%=ticketStatusEndPoint%>" type="text">
 						</aui:input>
 				
@@ -81,14 +86,15 @@ String opsSupportOrganizationId = portletPreferences.getValue("opsSupportOrganiz
 						</aui:input>
 						
 						
+				<h2>Health Check info</h2>
 						
-		<aui:input label="Important Organization Name" name="parentOrgName" ></aui:input>
+						<aui:input label="Health Check API Endpoint<br><small><i>Example: http://52.201.204.44:8081/healthcheck-db-access-api</i></small>" id="healthCheckApiEndpoint" name="healthCheckApiEndpoint" value="<%=healthCheckApiEndpoint%>" type="text"></aui:input>
 						
 						<aui:button-row>
 							<aui:button type="submit" value="Save"></aui:button>
 						</aui:button-row>
 						
-					</aui:fieldset> <%-- basig apil sa form --%>
+					</aui:fieldset>
 			</aui:col>
 		</aui:row>
 	</aui:form>
